@@ -1,0 +1,69 @@
+name: Build and push Docker images
+
+on:   
+  push:
+    branches:
+      - main
+      - develop
+    paths:
+      - '**.py'
+      - '**/Dockerfile'
+      - '**/.github/**.yaml'
+      - '**.yaml'
+      - '**.yaml'
+
+  pull_request:
+    paths:
+      - '**.py'
+      - '**/Dockerfile'
+      - '**/.github/**.yaml'
+      - '**.yaml'
+      - '**.yaml'
+
+  workflow_dispatch:
+    inputs:
+      forceImagePush:
+        description: "Force image push to Docker Hub"
+        default: "false"
+        required: true
+
+jobs:
+    build-and-push-producer:
+      runs-on: ubuntu-20.04
+      
+      permissions:
+        packages: write
+        contents: read
+
+      steps:
+        - uses: actions/checkout@v2
+
+        - uses: FranzDiebold/github-env-vars-action@v2
+
+        - name: Image name
+          id: get_image_name
+          run: echo "::set-output name=image_name::clip-text2image:${CI_REF_NAME_SLUG}"
+
+        - name: Pull already existed image
+          continue-on-error: true
+          run: |
+            IMAGE_ID=ghcr.io/${CI_REPOSITORY_OWNER_SLUG}/${{ steps.get_image_name.outputs.image_name }}
+            docker pull $IMAGE_ID
+
+        - name: Build image
+          env:
+            DOCKER_BUILDKIT: 1
+          run: docker build -t ${{ steps.get_image_name.outputs.image_name }} -f ./DockerfileMain --label "runnumber=${GITHUB_RUN_ID}" .
+
+        - name: Log in to registry
+          if: ${{ github.event_name == 'push' || github.event.inputs.forceImagePush == 'true' }}
+          run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+        - name: Push image
+          if: ${{ github.event_name == 'push' || github.event.inputs.forceImagePush == 'true' }}
+          run: |
+            IMAGE_ID=ghcr.io/${CI_REPOSITORY_OWNER_SLUG}/${{ steps.get_image_name.outputs.image_name }}
+
+            docker tag ${{ steps.get_image_name.outputs.image_name }} $IMAGE_ID
+
+            docker push $IMAGE_ID
