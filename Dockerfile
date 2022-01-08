@@ -38,4 +38,6 @@ USER root
 
 RUN chown -R ${NB_UID} ${HOME}
 
+WORKDIR ${HOME}
+
 USER ${NB_USER}
