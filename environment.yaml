@@ -1,0 +1,19 @@
+channels:
+  - defaults
+  - pytorch-lts
+  - pytorch
+  - conda-forge
+dependencies:
+  - python=3.8
+  - pip
+  - faiss-cpu
+  - pytorch==1.8.1
+  - cpuonly
+  - ipykernel
+  - torchvision
+  - ipywidgets
+  - h5py=3.6
+  - tqdm
+  - matplotlib=3.5
+  - jupyterlab
+  - notebook
