@@ -42,7 +42,7 @@ jobs:
 
         - name: Image name
           id: get_image_name
-          run: echo "::set-output name=image_name::database-seed:${CI_REF_NAME_SLUG}"
+          run: echo "::set-output name=image_name::clip-text2image:${CI_REF_NAME_SLUG}"
 
         - name: Pull already existed image
           continue-on-error: true
