@@ -1,12 +1,14 @@
 FROM continuumio/miniconda3:4.10.3
 
-RUN conda install -n base -y -c conda-forge mamba
+RUN conda install -n base -y -c conda-forge mamba && \
+    mamba clean -ya
 
 WORKDIR /home
 
 COPY ./environment.yaml ./
 
-RUN mamba env update -n base --file ./environment.yaml
+RUN mamba env update -n base --file ./environment.yaml && \
+    mamba clean -ya 
 
 ARG CLIP_HASH_VERSION=573315e83f07b53a61ff5098757e8fc885f1703e
 
