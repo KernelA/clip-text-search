@@ -44,12 +44,6 @@ jobs:
           id: get_image_name
           run: echo "::set-output name=image_name::clip-text2image:${CI_REF_NAME_SLUG}"
 
-        - name: Pull already existed image
-          continue-on-error: true
-          run: |
-            IMAGE_ID=ghcr.io/${CI_REPOSITORY_OWNER_SLUG}/${{ steps.get_image_name.outputs.image_name }}
-            docker pull $IMAGE_ID
-
         - name: Build image
           env:
             DOCKER_BUILDKIT: 1
