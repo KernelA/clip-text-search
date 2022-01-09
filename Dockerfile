@@ -37,7 +37,7 @@ RUN adduser --disabled-password \
     --uid ${NB_UID} \
     ${NB_USER}
 
-COPY ./image_search.ipynb ./utils.py ${HOME}/
+COPY ./image_search.ipynb ./utils.py ./start ${HOME}/
 
 USER root
 
