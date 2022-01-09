@@ -131,3 +131,4 @@ dmypy.json
 Flicker8k_Dataset/
 Flickr8k_Dataset.zip
 .vscode/
+*.faiss

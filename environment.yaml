@@ -6,7 +6,7 @@ channels:
 dependencies:
   - python=3.8
   - pip
-  - faiss-cpu
+  - faiss-cpu==1.7
   - pytorch==1.8.1
   - cpuonly
   - ipykernel
@@ -14,6 +14,9 @@ dependencies:
   - ipywidgets
   - h5py=3.6
   - tqdm
-  - matplotlib=3.5
-  - jupyterlab
+  - matplotlib==3.5
+  - jupyterlab==3.0
   - notebook
+  - voila==0.3.0
+  - pip:
+    - gdown~=4.2
