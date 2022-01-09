@@ -47,8 +47,4 @@ USER ${NB_USER}
 
 RUN python -c "import clip; clip.load('ViT-B/32')"
 
-COPY --chown=${NB_UID} ./image_search.ipynb ./utils.py ./start.sh ./
-
-RUN chmod u+x ./start.sh
-
-ENTRYPOINT [ "./start.sh" ]
+COPY --chown=${NB_UID} ./image_search.ipynb ./utils.py ./
