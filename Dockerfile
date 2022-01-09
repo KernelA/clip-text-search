@@ -46,3 +46,5 @@ RUN chown -R ${NB_UID} ${HOME}
 WORKDIR ${HOME}
 
 USER ${NB_USER}
+
+RUN python -c "import clip; clip.load('ViT-B/32')"
