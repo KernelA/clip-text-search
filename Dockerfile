@@ -37,8 +37,6 @@ RUN adduser --disabled-password \
     --uid ${NB_UID} \
     ${NB_USER}
 
-COPY ./image_search.ipynb ./utils.py ./start ${HOME}/
-
 USER root
 
 RUN chown -R ${NB_UID} ${HOME}
@@ -48,3 +46,9 @@ WORKDIR ${HOME}
 USER ${NB_USER}
 
 RUN python -c "import clip; clip.load('ViT-B/32')"
+
+COPY --chown=${NB_UID} ./image_search.ipynb ./utils.py ./start.sh ./
+
+RUN chmod u+x ./start.sh
+
+ENTRYPOINT [ "./start.sh" ]
