@@ -1,16 +1,14 @@
 channels:
   - defaults
-  - pytorch-lts
-  - pytorch
   - conda-forge
 dependencies:
   - python=3.8
   - pip
   - faiss-cpu==1.7
-  - pytorch==1.8.1
-  - cpuonly
+  - pytorch-lts::pytorch==1.8.2
+  - pytorch-lts::cpuonly
   - ipykernel
-  - torchvision==0.9
+  - pytorch-lts::torchvision
   - ipywidgets
   - h5py=3.6
   - tqdm
@@ -20,3 +18,4 @@ dependencies:
   - voila==0.3.0
   - pip:
     - gdown~=4.2
+    - git+https://github.com/openai/CLIP.git@d50d76daa670286dd6cacf3bcd80b5e4823fc8e1
