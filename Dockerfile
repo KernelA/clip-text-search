@@ -1,4 +1,4 @@
-FROM ghcr.io/kernela/clip-text-search:ghcr.io/kernela/clip-text-search:master-780576ad0fb7858e0e7f4f9ffb34fad11d054133
+FROM ghcr.io/kernela/clip-text-search:master-029994829121305d0c8728feb23ebd115266387b
 
 ARG NB_USER=jovyan
 
