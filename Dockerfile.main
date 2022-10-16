@@ -1,0 +1,16 @@
+FROM continuumio/miniconda3:4.12.0
+
+RUN apt update && \
+    apt install unzip -y
+
+RUN conda install -n base -y -c conda-forge mamba && \
+    mamba clean -ya
+
+WORKDIR /home
+
+COPY ./environment.yaml ./requirements.clip.txt ./requirements.cpu.txt ./
+
+RUN mamba env update -n base --file ./environment.yaml && \
+    mamba clean -ya
+
+RUN python -c "import clip; clip.load('ViT-B/32')"

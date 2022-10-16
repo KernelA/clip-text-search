@@ -1,0 +1,78 @@
+name: build-and-push-docker-image
+
+on:
+  push:
+    branches:
+      - "master"
+  workflow_dispatch:
+    
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build-and-push-image:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: write
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      
+      - id: string
+        uses: ASzc/change-string-case-action@v2
+        with:
+          string: ${{ env.IMAGE_NAME }}
+
+      - name: Replace image name
+        run: echo "IMAGE_NAME=${{ steps.string.outputs.lowercase }}" >> $GITHUB_ENV
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=sha,enable=true,priority=1000,prefix={{branch}}-,suffix=,format=long
+
+      - name: Generate Dockerfile
+        uses: cuchi/jinja2-action@v1.2.0
+        with:
+          template: Dockerfile.j2
+          output_file: Dockerfile
+          strict: true
+          variables: |
+            tag=${{ steps.meta.outputs.tags }}
+        
+      - uses: EndBug/add-and-commit@v9
+        with:
+          default_author: github_actions
+          add: Dockerfile
+          message: 'Update docker tag'
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          file: ./Dockerfile.main
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          builder: ${{ steps.buildx.outputs.name }}
+          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:buildcache
+          cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:buildcache,mode=max
