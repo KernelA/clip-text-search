@@ -12,5 +12,5 @@ Jupyter notebook with source code:
 
 By default `environment.yaml` has requirements for the Pytorch with CPU only support.
 
-You can modify `environment.yaml` with `requirements.gpu.txt` instead ``requirements.cpu.txt`.
+You can modify `environment.yaml` with `requirements.gpu.txt` instead `requirements.cpu.txt`.
 
